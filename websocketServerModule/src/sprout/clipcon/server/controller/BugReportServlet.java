@@ -79,7 +79,7 @@ public class BugReportServlet extends HttpServlet {
 		System.out.println("[BugReportServlet] bugReport: " + bugReport);
 
 		try {
-			FileWriter fw = new FileWriter(Server.RECEIVE_LOCATION + File.separator + outputFileName, true);
+			FileWriter fw = new FileWriter(GCServer.RECEIVE_LOCATION + File.separator + outputFileName, true);
 			BufferedWriter bw = new BufferedWriter(fw);
 
 			bw.write(bugReport);

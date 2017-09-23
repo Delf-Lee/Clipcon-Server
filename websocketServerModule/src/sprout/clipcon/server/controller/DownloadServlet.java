@@ -24,11 +24,11 @@ public class DownloadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	// root location where group folder exists
-	private final String ROOT_LOCATION = Server.RECEIVE_LOCATION + File.separator;
+	private final String ROOT_LOCATION = GCServer.RECEIVE_LOCATION + File.separator;
 	private final String LINE_FEED = "\r\n";
 	private final String charset = "UTF-8";
 
-	private Server server = Server.getInstance();
+	private GCServer server = GCServer.getInstance();
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

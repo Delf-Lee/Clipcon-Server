@@ -28,6 +28,7 @@ import javax.servlet.http.Part;
 import javax.websocket.EncodeException;
 
 import lombok.NoArgsConstructor;
+import message.MessageBroker;
 import sprout.clipcon.server.model.Contents;
 import sprout.clipcon.server.model.Group;
 import sprout.clipcon.server.model.message.Message;
@@ -42,19 +43,17 @@ public class UploadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 3432460337698180662L;
 	// root location where to save the upload file
-	private final String RECEIVE_LOCATION = Server.RECEIVE_LOCATION + File.separator;
-
-	private Server server = Server.getInstance();
+	private final String RECEIVE_LOCATION = GCServer.RECEIVE_LOCATION + File.separator;
+	private GCServer server = GCServer.getInstance();
+	private MessageBroker messageBroker = MessageBroker.getInstance();
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// requestMsgLog(request);
 		System.out.println("================================================================\ndoPost START");
 
@@ -64,10 +63,9 @@ public class UploadServlet extends HttpServlet {
 		String userName = request.getParameter("userName");
 		String groupPK = request.getParameter("groupPK");
 		String uploadTime = uploadTime(); // Time that server get request msg
-		String multipleFileListInfo = null; 
+		String multipleFileListInfo = null;
 
-		System.out.println("[SERVER] == Parameter info == \n **userName: " + userName + "\n *groupPK: " + groupPK
-				+ "\n *uploadTime: " + uploadTime);
+		System.out.println("[SERVER] == Parameter info == \n **userName: " + userName + "\n *groupPK: " + groupPK + "\n *uploadTime: " + uploadTime);
 
 		Group group = server.getGroupByPrimaryKey(groupPK);
 		if (group == null) {
@@ -96,8 +94,7 @@ public class UploadServlet extends HttpServlet {
 				uploadContents = new Contents(Contents.TYPE_IMAGE, userName, uploadTime, part.getSize());
 				group.addContents(uploadContents);
 
-				Image imageData = getImageDataStream(part.getInputStream(), groupPK,
-						uploadContents.getContentsPKName());
+				Image imageData = getImageDataStream(part.getInputStream(), groupPK, uploadContents.getContentsPKName());
 				MessageParser.addImageToMessage(uploadNoti, imageData);
 
 				System.out.println("imageData: " + imageData.toString());
@@ -119,7 +116,7 @@ public class UploadServlet extends HttpServlet {
 
 				multipleFileListInfo = request.getParameter("multipleFileListInfo");
 
-				uploadContents = new Contents(Contents.TYPE_MULTIPLE_FILE, userName, uploadTime, part.getSize(), multipleFileListInfo); 
+				uploadContents = new Contents(Contents.TYPE_MULTIPLE_FILE, userName, uploadTime, part.getSize(), multipleFileListInfo);
 				uploadContents.setContentsValue(getFilenameInHeader(part.getHeader("Content-Disposition"))); // save fileName
 
 				group.addContents(uploadContents);
@@ -134,11 +131,17 @@ public class UploadServlet extends HttpServlet {
 
 		MessageParser.addContentsToMessage(uploadNoti, uploadContents);
 
-		try {
-			group.sendAll(uploadNoti);
-		} catch (EncodeException e) {
-			e.printStackTrace();
+		if (group == null) {
+			System.out.println("   [delflog] group is null 0053 - " + this.getClass());
+		} else {
+			System.out.println("   [delflog] groupName: " + group.getPrimaryKey());
 		}
+		if (uploadNoti == null) {
+			System.out.println("   [delflog] uploadNoti is null 0053 - " + this.getClass());
+		} else {
+			System.out.println("   [delflog] uploadnoti: " + uploadNoti);
+		}
+		messageBroker.addMessage(uploadNoti, group.getTopic());
 		System.out.println();
 		System.out.println("End of servlet");
 		// responseMsgLog(response);

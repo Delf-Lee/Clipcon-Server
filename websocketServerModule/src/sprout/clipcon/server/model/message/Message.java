@@ -36,12 +36,7 @@ public class Message {
 		json = new JSONObject();
 		json.put(TYPE, type);
 		json.put(CONTENTS, jsonString);
-		System.out.println(json.toString());
 	}
-
-	// public void add(String key, String value) {
-	// json.put(key, value);
-	// }
 
 	public void add(String key, Object value) {
 		json.put(key, value);
@@ -50,7 +45,6 @@ public class Message {
 	public String get(String key) {
 		return json.get(key).toString();
 	}
-
 	public Object getObject(String key) {
 		return json.get(key);
 	}
@@ -111,4 +105,10 @@ public class Message {
 	
 	public final static String PING = "ping";
 	public final static String PONG = "pong";
+	
+	public final static String SERVERMSG = "server message";
+	public final static String HELLO = "hello";
+	public final static String TERMINAL_DEVICE = "device";
+	public final static String SESSION = "sesion-id";	
+	
 }

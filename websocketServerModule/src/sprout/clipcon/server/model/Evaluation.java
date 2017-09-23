@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import lombok.Setter;
-import sprout.clipcon.server.controller.Server;
+import sprout.clipcon.server.controller.GCServer;
 import sprout.clipcon.server.controller.UploadServlet;
 
 @Setter
@@ -45,7 +45,7 @@ public class Evaluation {
 		try {
 			local = InetAddress.getLocalHost();
 
-			FileWriter fw = new FileWriter(Server.SERVER_ROOT_LOCATION + outputFileName, true);
+			FileWriter fw = new FileWriter(GCServer.SERVER_ROOT_LOCATION + outputFileName, true);
 			BufferedWriter bw = new BufferedWriter(fw);
 
 			logdata = groupPK + "\t";
