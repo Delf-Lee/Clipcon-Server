@@ -17,6 +17,7 @@ import sprout.clipcon.server.model.message.Message;
 import sprout.clipcon.server.model.message.MessageDecoder;
 import sprout.clipcon.server.model.message.MessageEncoder;
 import sprout.clipcon.server.model.user.User;
+import sprout.clipcon.server.model.user.WindowsUser;
 
 @ServerEndpoint(value = "/ServerEndpoint", encoders = { MessageEncoder.class }, decoders = { MessageDecoder.class })
 public class WebsocketEndpoint {
@@ -38,13 +39,14 @@ public class WebsocketEndpoint {
 		this.session = userSession;
 		System.out.print("session open: " + userSession.getId());
 		System.out.print("(" + UploadServlet.uploadTime() + ")");
-
-		sendHelloMessage();
 	}
 
 	@OnMessage
 	public void handleMessage(Message message, Session session) throws IOException, EncodeException {
-		messageHandler.handleMessage(message, this);
+		if(user == null) {
+			user = new WindowsUser(this);
+		}
+		messageHandler.handleMessage(message, user);
 	}
 
 	@OnClose
@@ -57,8 +59,6 @@ public class WebsocketEndpoint {
 	@OnError
 	public void handleError(Throwable t) {
 		System.err.println("[WebsocketEndpoint] Error was occured.");
-		
-		t.printStackTrace();
 	}
 
 	public void sendMessage(Message message) {
@@ -71,12 +71,6 @@ public class WebsocketEndpoint {
 		}
 	}
 
-	private void sendHelloMessage() {
-		Message hello = new Message().setType(Message.HELLO);
-		hello.add(Message.SESSION, session.getId());
-		sendMessage(hello);
-	}
-	
 	public void closeSession() {
 		try {
 			session.close();

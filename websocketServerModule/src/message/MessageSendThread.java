@@ -15,8 +15,9 @@ public class MessageSendThread extends Thread {
 		try {
 			while (true) {
 				if (!tasks.isEmpty()) {
-					tasks.poll().send();
+					tasks.remove().send();
 				}
+				Thread.sleep(100);
 			}
 		} catch (Exception e) {
 			System.out.println("2321");

@@ -14,6 +14,7 @@ public abstract class User {
 	protected boolean subscribe = true;
 
 	public void send(Message message) {
+		
 	}
 	
 	public void close() {

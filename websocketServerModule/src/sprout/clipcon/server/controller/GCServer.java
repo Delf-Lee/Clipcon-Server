@@ -66,7 +66,7 @@ public class GCServer {
 		System.out.println("group key: " + groupKey);
 
 		Group newGroup = new Group(groupKey);
-		newGroup.setTopic(topTopic);
+		// newGroup.setTopic(topTopic);
 		groups.put(groupKey, newGroup);
 		return newGroup;
 	}
@@ -154,10 +154,13 @@ public class GCServer {
 	}
 
 	public User createUser(WebsocketEndpoint endpoint) {
-		System.out.println("   [delflog] create user" + this.getClass());
-		System.out.println("   [delflog] session: " + endpoint.getSession().getId());
-		WindowsUser user = new WindowsUser(endpoint);
-		endpoint.setUser(user);
+		User user = null;
+		if (endpoint != null) { // case windows user
+			user = new WindowsUser(endpoint);
+			endpoint.setUser(user);
+		} else { // case android user
+			user = new AndroidUser();
+		}
 		return user;
 	}
 
@@ -182,7 +185,7 @@ public class GCServer {
 	public User exitUserAtGroup(User user) {
 		Group group = user.getGroup();
 		User exitUser = group.removeUser(user.getUserName());
-
+		watingLine.remove(user);
 		if (group.getSize() == 0) {
 			GCServer.getInstance().removeGroup(group);
 		}
