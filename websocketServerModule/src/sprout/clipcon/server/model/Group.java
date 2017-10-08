@@ -1,6 +1,5 @@
 package sprout.clipcon.server.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,13 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import javax.websocket.EncodeException;
-
 import lombok.Getter;
 import lombok.Setter;
 import message.Topic;
-import sprout.clipcon.server.controller.WebsocketEndpoint;
-import sprout.clipcon.server.model.message.Message;
 import sprout.clipcon.server.model.user.User;
 
 public class Group {
@@ -31,6 +26,10 @@ public class Group {
 		this.primaryKey = primaryKey;
 		this.history = new History(primaryKey);
 		topic = new Topic(primaryKey);
+	}
+	
+	public User getUserByName(String name) {
+		return users2.get(name);
 	}
 
 //	public void sendWithout(String userName, Message message) throws IOException, EncodeException {

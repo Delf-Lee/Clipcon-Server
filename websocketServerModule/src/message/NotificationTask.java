@@ -11,7 +11,7 @@ public class NotificationTask {
 
 	// send message to all user topic subscriber
 	public NotificationTask(Message message, Topic topic, User user) {
-		//System.out.println("   [delflog] NotificationTask 1 - " + this.getClass());
+		System.out.println("[DEBUG] message task is created");
 		this.message = message;
 		this.topic = topic;
 		this.user = user;
@@ -23,19 +23,19 @@ public class NotificationTask {
 	// send message to all user topic subscriber except sender
 	public NotificationTask(Message message, Topic topic) {
 		this(message, topic, null);
-		//System.out.println("   [delflog] NotificationTask 2 - " + this.getClass());
 	}
 
 	// send message to user
 	public NotificationTask(Message message, User sender) {
 		this(message, null, sender);
-		//System.out.println("   [delflog] NotificationTask 3 - " + this.getClass());
 	}
 
 	public void send() {
+		System.out.println("[INFO] send message");
 		if (topic == null) {
-			user.send(message);
+			user.send(message); // send to only sender
 		} else {
+			sendToAndroid();
 			if (user == null) {
 				System.out.println("   @ send all user");
 				topic.publishMessage(message); // send all users
@@ -44,5 +44,9 @@ public class NotificationTask {
 				topic.publishMessage(message, user.getUserName()); // send except one user 
 			}
 		}
+	}
+	
+	private void sendToAndroid() {
+		
 	}
 }

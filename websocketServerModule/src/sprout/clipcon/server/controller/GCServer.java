@@ -184,6 +184,9 @@ public class GCServer {
 
 	public User exitUserAtGroup(User user) {
 		Group group = user.getGroup();
+		if(group == null) {
+			System.out.println("   1749) null group");
+		}
 		User exitUser = group.removeUser(user.getUserName());
 		watingLine.remove(user);
 		if (group.getSize() == 0) {

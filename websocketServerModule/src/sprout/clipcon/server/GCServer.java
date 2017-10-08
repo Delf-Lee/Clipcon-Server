@@ -25,7 +25,7 @@ public class GCServer {
 	private static GCServer uniqueInstance;
 	/** All groups on the server */
 	private Map<String, Group> groups = Collections.synchronizedMap(new HashMap<String, Group>());
-	private Map<String, User> watingLine = Collections.synchronizedMap(new HashMap<String, User>());
+	// private Map<String, User> watingLine = Collections.synchronizedMap(new HashMap<String, User>());
 
 	// private MessageBroker messageBroker = MessageBroker.getInstance();
 	private Topic topTopic = new Topic("Server"); // top topic
@@ -64,8 +64,7 @@ public class GCServer {
 
 	public synchronized Group createGroup() {
 		String groupKey = generatePrimaryKey(5);
-		System.out.println("group key: " + groupKey);
-
+		System.out.println("[INFO] create the group (" + groupKey + ")");
 		Group newGroup = new Group(groupKey);
 		newGroup.setTopic(topTopic);
 		groups.put(groupKey, newGroup);
@@ -150,9 +149,9 @@ public class GCServer {
 		return sdf.format(date).toString();
 	}
 
-	public User getUserBySession(String session) {
-		return watingLine.get(session);
-	}
+	// public User getUserBySession(String session) {
+	// return watingLine.get(session);
+	// }
 
 	public User createUser(WebsocketEndpoint endpoint) {
 		System.out.println("   [delflog] create user" + this.getClass());
@@ -166,19 +165,19 @@ public class GCServer {
 		return new AndroidUser();
 	}
 
-	public synchronized void putUserInWaitingLine(String sessionId, User user) {
-		watingLine.put(sessionId, user);
-	}
+	// public synchronized void putUserInWaitingLine(String sessionId, User user) {
+	// watingLine.put(sessionId, user);
+	// }
 
-	public synchronized User getUserBySessionIdInWatingLine(String seesionId) {
-		return watingLine.remove(seesionId);
-	}
+	// public synchronized User getUserBySessionIdInWatingLine(String seesionId) {
+	// return watingLine.remove(seesionId);
+	// }
 
-	public User peekUserBySessionInWatingLine(String sessionId) {
-		System.out.println("   [delflog] peek user - " + this.getClass());
-		System.out.println("   [delflog] session: " + sessionId);
-		return watingLine.get(sessionId);
-	}
+	// public User peekUserBySessionInWatingLine(String sessionId) {
+	// System.out.println(" [delflog] peek user - " + this.getClass());
+	// System.out.println(" [delflog] session: " + sessionId);
+	// return watingLine.get(sessionId);
+	// }
 
 	public User exitUserAtGroup(User user) {
 		Group group = user.getGroup();

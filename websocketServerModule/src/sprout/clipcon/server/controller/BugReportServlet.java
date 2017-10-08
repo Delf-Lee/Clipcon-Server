@@ -23,28 +23,20 @@ import javax.servlet.http.Part;
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10, fileSizeThreshold = 1024 * 1024, maxRequestSize = 1024 * 1024 * 10)
 @WebServlet("/bugreport")
 public class BugReportServlet extends HttpServlet {
-	
+
 	private static final long serialVersionUID = 1L;
 	private final String outputFileName = "bugReport.txt";
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		
-		String page = "/bugreport2.jsp";
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-		dispatcher.forward(request, response);
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-
+		System.out.println("post called");
 		/* Gets the bug message entered by the client */
-		Part part = request.getPart("bugMessage");
+		Part part = request.getPart("message");
 		InputStream is = part.getInputStream();
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 		StringBuilder stringBuilder = new StringBuilder();
@@ -64,7 +56,7 @@ public class BugReportServlet extends HttpServlet {
 			}
 		}
 		bugMessage = stringBuilder.toString();
-		
+
 		/* Set up the entire message to leave a bug report */
 		String bugReport = "";
 		// String bugMessage = request.getParameter("bugMessage"); // encoding problem

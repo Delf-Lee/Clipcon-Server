@@ -27,7 +27,7 @@ public class GCMessageHandler implements MessageHandler {
 		handleMessage(msessage, null);
 	}
 
-	public void handleMessage(Message message, User user) {
+	public Message handleMessage(Message message, User user) {
 		String type = message.getType(); // extract type of received message
 		System.out.println("[WebsocketEndpoint] message received success. type: " + type); // check message type
 		Message responseMsg = null; // Initialize message to send to client
@@ -36,7 +36,6 @@ public class GCMessageHandler implements MessageHandler {
 		Group group = null;
 		// User user = null;
 		String userName = null;
-		String sessionId = null;
 
 		switch (type) {
 		case Message.HELLO:
@@ -146,8 +145,11 @@ public class GCMessageHandler implements MessageHandler {
 			System.out.println("Exception");
 			break;
 		}
-
+		System.out.println("[DEBUG] before add message");
+		System.out.println("       message: " + message);
 		messageBroker.addMessage(responseMsg, user);
+		
+		return responseMsg;
 	}
 
 	public void exitUserAtGroup(User user) {
@@ -160,6 +162,5 @@ public class GCMessageHandler implements MessageHandler {
 			messageBroker.addMessage(noti, user.getGroup().getTopic(), user);
 		}
 	}
-
 
 }
