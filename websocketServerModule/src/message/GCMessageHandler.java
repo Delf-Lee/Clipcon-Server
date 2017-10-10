@@ -13,7 +13,7 @@ public class GCMessageHandler implements MessageHandler {
 	private static GCServer server = GCServer.getInstance();
 	private static GCMessageHandler uniqeInstance;
 	private MessageBroker messageBroker = MessageBroker.getInstance();
-
+	
 	private GCMessageHandler() {}
 
 	public static GCMessageHandler getInstance() {
@@ -146,9 +146,9 @@ public class GCMessageHandler implements MessageHandler {
 			break;
 		}
 		System.out.println("[DEBUG] before add message");
-		System.out.println("       message: " + message);
+		System.out.println("       message: " + responseMsg);
 		messageBroker.addMessage(responseMsg, user);
-		
+		System.out.println("       message: " + responseMsg);
 		return responseMsg;
 	}
 

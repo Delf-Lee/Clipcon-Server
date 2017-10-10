@@ -56,7 +56,8 @@ public class GCServer {
 	public Group getGroupByPrimaryKey(String key) {
 		// Set<String> set = groups.keySet();
 		// Iterator<String> it = set.iterator();
-
+		System.out.println("[DEBUG] getGroupByPrimaryKey: " + key);
+		System.out.println("[DEBUG] group size before get group: " + groups.size());
 		Group targetGroup = groups.get(key);
 		return targetGroup;
 	}
@@ -68,6 +69,7 @@ public class GCServer {
 		Group newGroup = new Group(groupKey);
 		// newGroup.setTopic(topTopic);
 		groups.put(groupKey, newGroup);
+		System.out.println("[DEBUG] groups size after insert group: " + groups.size());
 		return newGroup;
 	}
 
@@ -101,6 +103,7 @@ public class GCServer {
 	}
 
 	public synchronized void removeGroup(Group group) {
+		System.out.println("[DEBUG] groups size in remove..: " + group.getSize());
 		Group removeGroup = groups.remove(group.getPrimaryKey());
 		if (removeGroup != null) {
 			deleteAllFilesInGroupDir(removeGroup.getPrimaryKey());

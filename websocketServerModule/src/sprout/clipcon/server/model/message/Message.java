@@ -41,6 +41,16 @@ public class Message {
 	public void add(String key, Object value) {
 		json.put(key, value);
 	}
+	
+	public void remove(String key) {
+		json.remove(key);
+	}
+	
+	public void replace(String key, String frashValue) {
+		json.remove(key);
+		json.put(key, frashValue);
+	}
+	
 
 	public String get(String key) {
 		return json.get(key).toString();
@@ -76,10 +86,10 @@ public class Message {
 	public final static String RESPONSE_JOIN_GROUP = "response/join group";
 	public final static String RESPONSE_EXIT_GROUP = "response/exit group";
 	public final static String RESPONSE_CHANGE_NAME = "response/change name";
-	public final static String NOTI_ADD_PARTICIPANT = "noti/add participant";
-	public final static String NOTI_EXIT_PARTICIPANT = "noti/exit participant";
-	public final static String NOTI_UPLOAD_DATA = "noti/upload data";
-	public final static String NOTI_CHANGE_NAME = "noti/change name";
+    public final static String NOTI_ADD_PARTICIPANT = "noti-add participant";
+    public final static String NOTI_CHANGE_NAME = "noti-change name";
+    public final static String NOTI_EXIT_PARTICIPANT = "noti-exit participant";
+    public final static String NOTI_UPLOAD_DATA = "noti-upload data";
 	
 	public final static String CLIPCON_VERSION = "clipcon version";
 

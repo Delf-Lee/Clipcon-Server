@@ -13,9 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.json.JSONException;
+
 import message.GCMessageHandler;
 import sprout.clipcon.server.model.Group;
 import sprout.clipcon.server.model.message.Message;
+import sprout.clipcon.server.model.user.AndroidUser;
 import sprout.clipcon.server.model.user.User;
 
 /**
@@ -33,14 +36,26 @@ public class AndroidServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("called AndroidServlet");
 		Message reqMsg = getMessage(request);
-		String key = reqMsg.get(Message.GROUP_PK);
-		
-		GCServer server = GCServer.getInstance();
-		Group group = server.getGroupByPrimaryKey(key);
-		User user = group.getUserByName(reqMsg.get(Message.NAME));
-		// String resMsg = GCMessageHandler.getInstance().handleMessage(reqMsg, user);
-		// response.getWriter().append(reqMsg);
+		User user;
+		try {
+			String key = reqMsg.get(Message.GROUP_PK);
+			GCServer server = GCServer.getInstance();
+			Group group = server.getGroupByPrimaryKey(key);
+			if (group != null) {
+				user = group.getUserByName(reqMsg.get(Message.NAME));
+			} else {
+				user = new AndroidUser();
+			}
+		} catch (JSONException e) {
+			System.out.println("[DEBUG] JSONException, create android user object");
+			user = new AndroidUser();
+		}
+
+		Message resMsg = GCMessageHandler.getInstance().handleMessage(reqMsg, user);
+		System.out.println("[DEBUG] check message before send: " + resMsg.toString());
+		response.getWriter().append(resMsg.toString());
 	}
 
 	public Message getMessage(HttpServletRequest request) {

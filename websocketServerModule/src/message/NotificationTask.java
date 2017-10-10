@@ -1,5 +1,7 @@
 package message;
 
+import org.json.JSONException;
+
 import sprout.clipcon.server.model.message.Message;
 import sprout.clipcon.server.model.user.User;
 
@@ -35,18 +37,22 @@ public class NotificationTask {
 		if (topic == null) {
 			user.send(message); // send to only sender
 		} else {
-			sendToAndroid();
+			
 			if (user == null) {
 				System.out.println("   @ send all user");
 				topic.publishMessage(message); // send all users
 			} else {
 				System.out.println("   @ send except one user");
-				topic.publishMessage(message, user.getUserName()); // send except one user 
+				topic.publishMessage(message, user.getUserName()); // send except one user
 			}
+			try {
+				message.replace("imageString", "-");
+			} catch (JSONException e) {
+				System.out.println("예외 발생");
+			}
+			System.out.println("try 밖");
+			FirebaseMessageRequester.getInstance();
+			FirebaseMessageRequester.requestFcm(message, topic.getTopicName());
 		}
-	}
-	
-	private void sendToAndroid() {
-		
 	}
 }
